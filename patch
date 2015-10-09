@@ -1,0 +1,97 @@
+From 9d6eedce7fe20a40e0435cd90e648c43343b0fdf Mon Sep 17 00:00:00 2001
+From: kopa <kopa@gurtam.com>
+Date: Wed, 10 Sep 2014 17:05:32 +0300
+Subject: [PATCH] Added fade effect for content
+
+---
+ .../asm/src/main/java/com/vsa/asm/lib/CustomViewAbove.java           | 26 ++++++++++++++++++++++
+ .../asm/src/main/java/com/vsa/asm/lib/SlidingMenu.java               | 24 +++++++++++++++++---
+ 2 files changed, 47 insertions(+), 3 deletions(-)
+
+diff --git a/asm/src/main/java/com/vsa/asm/lib/CustomViewAbove.java asm/src/main/java/com/vsa/asm/lib/CustomViewAbove.java
+index fa73ef0..0da688d 100644
+--- a/asm/src/main/java/com/vsa/asm/lib/CustomViewAbove.java
++++ b/asm/src/main/java/com/vsa/asm/lib/CustomViewAbove.java
+@@ -5,7 +5,10 @@
+ 
+ import android.content.Context;
+ import android.graphics.Canvas;
++import android.graphics.Color;
++import android.graphics.Paint;
+ import android.graphics.Rect;
++import android.graphics.drawable.Drawable;
+ import android.os.Build;
+ import android.support.v4.view.KeyEventCompat;
+ import android.support.v4.view.MotionEventCompat;
+@@ -829,6 +832,29 @@ protected void dispatchDraw(Canvas canvas) {
+ 		mViewBehind.drawShadow(mContent, canvas);
+ 		mViewBehind.drawFade(mContent, canvas, getPercentOpen());
+ 		mViewBehind.drawSelector(mContent, canvas, getPercentOpen());
++		drawFade(canvas, getPercentOpen());
++	}
++
++	private final Paint mFadePaint = new Paint();
++	private float mFadeDegree;
++	private boolean mFadeEnabled;
++
++	public void setFadeEnabled(boolean isEnabled) {
++		mFadeEnabled = isEnabled;
++	}
++
++	public void setFadeDegree(float degree) {
++		if (degree > 1.0f || degree < 0.0f)
++			throw new IllegalStateException("The ContentFadeDegree must be between 0.0f and 1.0f");
++		mFadeDegree = degree;
++	}
++
++	private void drawFade(Canvas canvas, float openPercent) {
++		if (!mFadeEnabled)
++			return;
++		final int alpha = (int) (mFadeDegree * 255 * Math.abs(openPercent));
++		mFadePaint.setColor(Color.argb(alpha, 0, 0, 0));
++		canvas.drawRect(getLeft(), 0, getWidth(), getHeight(), mFadePaint);
+ 	}
+ 
+ 	// variables for drawing
+diff --git a/asm/src/main/java/com/vsa/asm/lib/SlidingMenu.java b/asm/src/main/java/com/vsa/asm/lib/SlidingMenu.java
+index 8b88708..814fa8a 100644
+--- a/asm/src/main/java/com/vsa/asm/lib/SlidingMenu.java
++++ b/asm/src/main/java/com/vsa/asm/lib/SlidingMenu.java
+@@ -803,6 +803,24 @@ public void setFadeEnabled(boolean b) {
+ 	}
+ 
+ 	/**
++	 * Enables or disables the content's fade in and out
++	 * @param isEnabled true to enable fade, false to disable it
++	 */
++	public void setContentFadeEnabled(boolean isEnabled){
++		mViewAbove.setFadeEnabled(isEnabled);
++	}
++
++	/**
++	 * Sets how much the content fades in and out. Fade must be enabled, see
++	 * {@link #setFadeEnabled(boolean) setFadeEnabled(boolean)}
++	 *
++	 * @param f the new fade degree, between 0.0f and 1.0f
++	 */
++	public void setContentFadeDegree(float f) {
++		mViewAbove.setFadeDegree(f);
++	}
++
++	/**
+ 	 * Sets how much the SlidingMenu fades in and out. Fade must be enabled, see
+ 	 * {@link #setFadeEnabled(boolean) setFadeEnabled(boolean)}
+ 	 *
+@@ -859,9 +877,9 @@ public void addIgnoredView(View v) {
+ 
+ 	/**
+ 	 * Remove a View ignored by the Touch Down event when mode is Fullscreen
+-	 *
+-	 * @param v a view not wanted to be ignored anymore
+-	 */
++	*
++			* @param v a view not wanted to be ignored anymore
++	*/
+ 	public void removeIgnoredView(View v) {
+ 		mViewAbove.removeIgnoredView(v);
+ 	}

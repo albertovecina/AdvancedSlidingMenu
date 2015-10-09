@@ -5,12 +5,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.vsa.asm.lib.SlidingMenu;
+
 public class DemoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
+        SlidingMenu menu = new SlidingMenu(this);
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        menu.setShadowWidth(200);
+        menu.setShadowDrawable(R.drawable.slidingmenu_shadow);
+        menu.setContentFadeEnabled(true);
+        menu.setBehindOffset(200);
+        menu.setContentFadeDegree(0.35f);
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        menu.setMenu(R.layout.layout_memu);
     }
 
     @Override
