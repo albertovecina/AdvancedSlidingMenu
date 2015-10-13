@@ -100,7 +100,6 @@ public class SlidingMenu extends RelativeLayout {
 	 * the onOpened event occurs, that object's appropriate
 	 * method is invoked.
 	 *
-	 * @see OnOpenedEvent
 	 */
 	public interface OnOpenedListener {
 
@@ -119,7 +118,6 @@ public class SlidingMenu extends RelativeLayout {
 	 * the onClose event occurs, that object's appropriate
 	 * method is invoked.
 	 *
-	 * @see OnCloseEvent
 	 */
 	public interface OnCloseListener {
 
@@ -138,7 +136,6 @@ public class SlidingMenu extends RelativeLayout {
 	 * the onClosed event occurs, that object's appropriate
 	 * method is invoked.
 	 *
-	 * @see OnClosedEvent
 	 */
 	public interface OnClosedListener {
 
@@ -378,7 +375,7 @@ public class SlidingMenu extends RelativeLayout {
 	/**
 	 * Set the behind view (menu) content to the given View.
 	 *
-	 * @param view The desired content to display.
+	 * @param v The desired content to display.
 	 */
 	public void setMenu(View v) {
 		mViewBehind.setContent(v);
@@ -405,7 +402,7 @@ public class SlidingMenu extends RelativeLayout {
 	/**
 	 * Set the secondary behind view (right menu) content to the given View.
 	 *
-	 * @param view The desired content to display.
+	 * @param v The desired content to display.
 	 */
 	public void setSecondaryMenu(View v) {
 		mViewBehind.setSecondaryContent(v);
